@@ -10,15 +10,15 @@ all: testgui
 
 CC=gcc
 CXX=g++
-COBJS=../libusb/hid.o
-CPPOBJS=test.o
+COBJS=
+CPPOBJS=../windows/hid.o test.o
 OBJS=$(COBJS) $(CPPOBJS)
-CFLAGS=-I../hidapi -Wall -g -c `fox-config --cflags` `pkg-config libusb-1.0 --cflags`
-LIBS=-ludev -lrt -lpthread `fox-config --libs` `pkg-config libusb-1.0 --libs`
+CFLAGS=-I../hidapi -I../../hidapi-externals/fox/include -g -c
+LIBS= -lsetupapi -L../../hidapi-externals/fox/lib -lFOX-1.6 -lgdi32 -Wl,--enable-auto-import -lkernel32
 
 
 testgui: $(OBJS)
-	g++ -Wall -g $^ $(LIBS) -o testgui
+	g++ -g $^ $(LIBS) -o testgui
 
 $(COBJS): %.o: %.c
 	$(CC) $(CFLAGS) $< -o $@
@@ -27,6 +27,6 @@ $(CPPOBJS): %.o: %.cpp
 	$(CXX) $(CFLAGS) $< -o $@
 
 clean:
-	rm *.o testgui
+	rm *.o testgui.exe
 
 .PHONY: clean

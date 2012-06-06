@@ -6,19 +6,19 @@
 # 2010-06-01
 ###########################################
 
-all: testgui
+all: hidtest
 
 CC=gcc
 CXX=g++
-COBJS=../libusb/hid.o
-CPPOBJS=test.o
+COBJS=hid.o
+CPPOBJS=../hidtest/hidtest.o
 OBJS=$(COBJS) $(CPPOBJS)
-CFLAGS=-I../hidapi -Wall -g -c `fox-config --cflags` `pkg-config libusb-1.0 --cflags`
-LIBS=-ludev -lrt -lpthread `fox-config --libs` `pkg-config libusb-1.0 --libs`
+CFLAGS=-I../hidapi -g -c
+LIBS= -lsetupapi
 
 
-testgui: $(OBJS)
-	g++ -Wall -g $^ $(LIBS) -o testgui
+hidtest: $(OBJS)
+	g++ -g $^ $(LIBS) -o hidtest
 
 $(COBJS): %.o: %.c
 	$(CC) $(CFLAGS) $< -o $@
@@ -27,6 +27,6 @@ $(CPPOBJS): %.o: %.cpp
 	$(CXX) $(CFLAGS) $< -o $@
 
 clean:
-	rm *.o testgui
+	rm *.o ../hidtest/*.o hidtest.exe
 
 .PHONY: clean

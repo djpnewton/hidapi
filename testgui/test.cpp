@@ -180,6 +180,9 @@ MainWindow::MainWindow(FXApp *app)
 
 MainWindow::~MainWindow()
 {
+	if (connected_device)
+		hid_close(connected_device);
+	hid_exit();
 	delete title_font;
 }
 
@@ -343,7 +346,7 @@ MainWindow::onSendFeatureReport(FXObject *sender, FXSelector sel, void *ptr)
 	char buf[256];
 	size_t len;
 	len = getDataFromTextField(feature_text, buf, sizeof(buf));
-	for (int i = 0; i < len; i++) {
+	for (unsigned int i = 0; i < len; i++) {
 		printf("%02hhx\n", buf[i]);
 	}
 	
